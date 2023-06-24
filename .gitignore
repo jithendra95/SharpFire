@@ -1,0 +1,4 @@
+﻿### RedGate Build system
+/.vs
+/.idea
+.build

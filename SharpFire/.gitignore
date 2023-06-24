@@ -1,0 +1,4 @@
+﻿### RedGate Build system
+/obj
+/.idead
+.build
