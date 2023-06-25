@@ -4,10 +4,11 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="RealtimeDatabase\Api\" />
+      <PackageReference Include="Google.Apis.IAMCredentials.v1" Version="1.60.0.2528" />
     </ItemGroup>
 
 </Project>
