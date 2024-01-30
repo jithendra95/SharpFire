@@ -1,13 +1,16 @@
-﻿using Google.Apis.Auth.OAuth2;
+﻿using SharpFire.Database;
+
 namespace SharpFire.FirebaseApp;
 
 public static class FirebaseApp
 {
-    public static ServiceAccountCredential? ServiceAccountCredential { get; private set; }
-    
-    public static void Initialize(string pathToJsonFile)
+    private static RealtimeDatabase? _realtimeDatabase = default;
+
+    public static RealtimeDatabase RealtimeDatabase =>
+        _realtimeDatabase ?? throw new Exception("FirebaseApp is not initialized");
+
+    public static void Create(AppOptions appOptions)
     {
-        var googleCredentials = GoogleCredential.FromFile(pathToJsonFile);
-        ServiceAccountCredential = googleCredentials.UnderlyingCredential as ServiceAccountCredential;
+        _realtimeDatabase = new RealtimeDatabase(appOptions.AccessToken, appOptions.DatabaseUrl);
     }
 }
