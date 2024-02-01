@@ -7,10 +7,11 @@ namespace SharpFire.Database;
 
 public class RealtimeDatabase : IDisposable
 {
-    private readonly HttpClient _client = new();
+    private readonly HttpClient _client;
 
-    public RealtimeDatabase(string accessToken, string databaseUrl)
+    public RealtimeDatabase(string accessToken, string databaseUrl, HttpClient client)
     {
+        _client = client;
         AccessToken = accessToken;
         DatabaseUrl = databaseUrl;
     }
@@ -63,6 +64,5 @@ public class RealtimeDatabase : IDisposable
     public void Dispose()
     {
         SuppressFinalize(this);
-        _client.Dispose();
     }
 }
