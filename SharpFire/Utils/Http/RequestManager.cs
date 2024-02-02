@@ -1,6 +1,6 @@
 ﻿namespace SharpFire.Utils.Http;
 
-public class RequestManager : IRequestManager
+internal class RequestManager : IRequestManager
 {
     private readonly HttpClient _client;
 
@@ -41,7 +41,6 @@ public class RequestManager : IRequestManager
         };
         return await SendRequest(httpMessage);
     }
-    
 
     public async Task<bool> Delete(string url)
     {
@@ -55,6 +54,5 @@ public class RequestManager : IRequestManager
             .SendAsync(httpMessage);
         return await response.Content.ReadAsStringAsync();
     }
-
     
 }
