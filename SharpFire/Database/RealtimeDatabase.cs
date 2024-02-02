@@ -1,64 +1,66 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
+using SharpFire.Utils.Http;
+using SharpFire.Utils.Serializer;
 using static System.GC;
-using Console = System.Console;
 
 namespace SharpFire.Database;
 
 public class RealtimeDatabase : IDisposable
 {
-    private readonly HttpClient _client;
 
-    public RealtimeDatabase(string accessToken, string databaseUrl, HttpClient client)
-    {
-        _client = client;
-        AccessToken = accessToken;
-        DatabaseUrl = databaseUrl;
-    }
+    private readonly ISerializer _serializer;
 
+    private readonly IRequestManager _requestManager;
     private string AccessToken { get; }
-    private string DatabaseUrl { get; }
+
+    public RealtimeDatabase(string accessToken, ISerializer serializer,
+        IRequestManager requestManager)
+    {
+        
+        _serializer = serializer;
+        _requestManager = requestManager;
+        AccessToken = accessToken;
+    }
 
     public async Task<T?> Get<T>(string path)
     {
-        var response = await _client
-            .GetAsync(
-                $"{DatabaseUrl}/{path}.json?auth={AccessToken}");
-        var responseData = await response.Content.ReadAsStringAsync();
+        var responseData = await Get(path);
         return JsonConvert.DeserializeObject<T>(responseData);
     }
 
-    public async Task<bool> Post<T>(string path, T value)
+    public async Task<string> Get(string path)
     {
-        var response = await _client
-            .PostAsync(
-                $"{DatabaseUrl}/{path}.json?auth={AccessToken}", new StringContent(JsonConvert.SerializeObject(value)));
-       return response.StatusCode == HttpStatusCode.OK;
+        return await _requestManager.Get(RequestUri(path));
     }
-    
-    public async Task<string> Put<T>(string path, T value)
+
+    public async Task<string> Post<T>(string path, T value)
     {
-        var response = await _client
-            .PutAsync(
-                $"{DatabaseUrl}/{path}.json?auth={AccessToken}", new StringContent(JsonConvert.SerializeObject(value)));
-        var responseData = await response.Content.ReadAsStringAsync();
-        return responseData;
+        var responseData = await _requestManager.Post<T>(RequestUri(path), _serializer.Serialize(value));
+        var createdName = _serializer.Deserialize<PostResponse>(responseData);
+        return createdName?.name ?? string.Empty;
     }
-    
-    public async Task<bool> Patch<T>(string path, T value)
+
+    public async Task<T?> Put<T>(string path, T value)
     {
-        var response = await _client
-            .PatchAsync(
-                $"{DatabaseUrl}/{path}.json?auth={AccessToken}", new StringContent(JsonConvert.SerializeObject(value)));
-        return response.StatusCode == HttpStatusCode.OK;
+        var responseData = await _requestManager.Put<T>(RequestUri(path), _serializer.Serialize(value));
+        return _serializer.Deserialize<T>(responseData);
     }
-    
+
+    public async Task<T?> Patch<T>(string path, T value)
+    {
+        var responseData = await _requestManager.Patch<T>(RequestUri(path), _serializer.Serialize(value));
+        return JsonConvert.DeserializeObject<T>(responseData);
+    }
+
     public async Task<bool> Delete(string path)
     {
-        var response = await _client
-            .DeleteAsync(
-                $"{DatabaseUrl}/{path}.json?auth={AccessToken}");
-        return response.StatusCode == HttpStatusCode.OK;
+        return await _requestManager.Delete(RequestUri(path));
+    }
+
+    private string RequestUri(string path)
+    {
+        return $"{path}.json?auth={AccessToken}";
     }
 
     public void Dispose()
