@@ -1,14 +1,5 @@
 ﻿namespace SharpFire.Utils.Http;
 
-public interface IRequestManager
-{
-    Task<string> Get(string url);
-    Task<string> Post<T>(string url, StringContent content);
-    Task<string> Put<T>(string url, StringContent content);
-    Task<string> Patch<T>(string url, StringContent content);
-    Task<bool> Delete(string url);
-}
-
 public class RequestManager : IRequestManager
 {
     private readonly HttpClient _client;
@@ -24,7 +15,7 @@ public class RequestManager : IRequestManager
         return await SendRequest(httpMessage);
     }
 
-    public async Task<string> Post<T>(string url, StringContent content)
+    public async Task<string> Post(string url, StringContent content)
     {
         var httpMessage = new HttpRequestMessage(HttpMethod.Post, url)
         {
@@ -33,7 +24,7 @@ public class RequestManager : IRequestManager
         return await SendRequest(httpMessage);
     }
     
-    public async Task<string> Put<T>(string url, StringContent content)
+    public async Task<string> Put(string url, StringContent content)
     {
         var httpMessage = new HttpRequestMessage(HttpMethod.Put, url)
         {
@@ -42,7 +33,7 @@ public class RequestManager : IRequestManager
         return await SendRequest(httpMessage);
     }
 
-    public async Task<string> Patch<T>(string url, StringContent content)
+    public async Task<string> Patch(string url, StringContent content)
     {
         var httpMessage = new HttpRequestMessage(HttpMethod.Patch, url)
         {
