@@ -9,6 +9,8 @@ public static class FirebaseApp
     private static RealtimeDatabase? _realtimeDatabase;
     private static readonly ISerializer Serializer = new Serializer();
 
+    private static readonly object CreationLock = new();
+    
     public static RealtimeDatabase RealtimeDatabase =>
         _realtimeDatabase ?? throw new Exception("FirebaseApp is not initialized");
 
@@ -21,10 +23,24 @@ public static class FirebaseApp
     /// <param name="appOptions"></param>
     public static void Create(AppOptions appOptions)
     {
-        var httpClient = new HttpClient();
-        httpClient.BaseAddress = new Uri(appOptions.DatabaseUrl);
+        lock (CreationLock)
+        {
+            if (_realtimeDatabase != null)
+                throw new Exception("FirebaseApp is already initialized");
+                    
+            var httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri(appOptions.DatabaseUrl);
 
-        var requestManager = new RequestManager(httpClient);
-        _realtimeDatabase = new RealtimeDatabase(appOptions.AccessToken, Serializer, requestManager);
+            var requestManager = new RequestManager(httpClient, appOptions.AccessToken);
+            _realtimeDatabase = new RealtimeDatabase( Serializer, requestManager);
+        }
+    }
+    
+    public static void Dispose()
+    {
+        lock (CreationLock)
+        {
+            _realtimeDatabase?.Dispose();
+        }
     }
 }

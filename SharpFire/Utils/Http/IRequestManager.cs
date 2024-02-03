@@ -1,6 +1,6 @@
 namespace SharpFire.Utils.Http;
 
-public interface IRequestManager
+public interface IRequestManager: IDisposable
 {
     Task<string> Get(string url);
     Task<string> Post(string url, StringContent content);
