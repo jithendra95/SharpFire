@@ -2,7 +2,7 @@
 using SharpFire.Utils.Http;
 using SharpFire.Utils.Serializer;
 
-namespace SharpFire.FirebaseApp;
+namespace SharpFire.Firebase;
 
 public static class FirebaseApp
 {
@@ -23,6 +23,16 @@ public static class FirebaseApp
     /// <param name="appOptions"></param>
     public static void Create(AppOptions appOptions)
     {
+        if (string.IsNullOrWhiteSpace(appOptions.AccessToken))
+        {
+            throw new Exception("Access token cannot be empty");
+        }
+        
+        if (string.IsNullOrWhiteSpace(appOptions.DatabaseUrl))
+        {
+            throw new Exception("Database URL cannot be empty");
+        }
+        
         lock (CreationLock)
         {
             if (_realtimeDatabase != null)
@@ -41,6 +51,7 @@ public static class FirebaseApp
         lock (CreationLock)
         {
             _realtimeDatabase?.Dispose();
+            _realtimeDatabase = null;
         }
     }
 }
