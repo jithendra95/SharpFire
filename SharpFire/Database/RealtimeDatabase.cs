@@ -27,7 +27,7 @@ public class RealtimeDatabase : IDisposable
     public async Task<T?> Get<T>(string path)
     {
         var responseData = await Get(path);
-        return JsonConvert.DeserializeObject<T>(responseData);
+        return _serializer.Deserialize<T>(responseData);
     }
 
     /// <summary>
