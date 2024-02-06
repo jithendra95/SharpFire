@@ -99,7 +99,7 @@ public class RealtimeDatabase : IDisposable
     public async Task<T?> Patch<T>(string path, T value)
     {
         var responseData = await _requestManager.Patch(path, _serializer.Serialize(value));
-        return JsonConvert.DeserializeObject<T>(responseData);
+        return _serializer.Deserialize<T>(responseData);
     }
 
     /// <summary>
