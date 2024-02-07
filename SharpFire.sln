@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFire", "SharpFire\Shar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Unit", "Tests.Unit\Tests.Unit.csproj", "{502058C5-B9FA-4D20-B10A-B0A575BD96F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Integration", "Tests.Integration\Tests.Integration.csproj", "{4C57A0F5-3D22-4994-99FE-271B1A3BC679}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{502058C5-B9FA-4D20-B10A-B0A575BD96F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{502058C5-B9FA-4D20-B10A-B0A575BD96F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{502058C5-B9FA-4D20-B10A-B0A575BD96F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C57A0F5-3D22-4994-99FE-271B1A3BC679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C57A0F5-3D22-4994-99FE-271B1A3BC679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C57A0F5-3D22-4994-99FE-271B1A3BC679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C57A0F5-3D22-4994-99FE-271B1A3BC679}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
