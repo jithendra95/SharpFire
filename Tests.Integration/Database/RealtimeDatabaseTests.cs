@@ -35,4 +35,20 @@ public class RealtimeDatabaseTests : FirebaseTestBase
         mockObject?.Name.Should().Be("John");
         mockObject?.Age.Should().Be(25);
     }
+    
+    [Test]
+    public async Task GetWithType_ShouldReturnObject()
+    {
+        var result = await FirebaseApp.RealtimeDatabase.Get<MockObject>($"{TestEndpoint}{_testId}");
+        result?.Name.Should().Be("John");
+        result?.Age.Should().Be(25);
+    }
+    
+    [Test]
+    public async Task PosyWithType_ShouldReturnStringName()
+    {
+        var newObject = new MockObject("Nathan ", 30);
+        var result = await FirebaseApp.RealtimeDatabase.Post<MockObject>($"{TestEndpoint}{_testId}", newObject);
+        result.Should().NotBeNull();
+    }
 }
