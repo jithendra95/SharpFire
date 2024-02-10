@@ -11,6 +11,7 @@
   </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoFixture" Version="5.0.0-preview0007" />
         <PackageReference Include="FluentAssertions" Version="7.0.0-alpha.3" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
         <PackageReference Include="NUnit" Version="3.13.3" />
