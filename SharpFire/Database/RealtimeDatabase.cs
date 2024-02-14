@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SharpFire.Database.Exceptions;
 using SharpFire.Utils.Http;
 using SharpFire.Utils.Serializer;
 using static System.GC;
@@ -10,6 +11,7 @@ public class RealtimeDatabase : IDisposable
     private readonly ISerializer _serializer;
 
     private readonly IRequestManager _requestManager;
+    private const string NullString = "null";
 
 
     public RealtimeDatabase(ISerializer serializer, IRequestManager requestManager)
@@ -27,6 +29,9 @@ public class RealtimeDatabase : IDisposable
     public async Task<T?> Get<T>(string path)
     {
         var responseData = await Get(path);
+        if (responseData is null)
+            throw new NoDataFoundException(
+                $"No data was found at the path {path}, Please verify if the path is correct and has data in the Realtime Database");
         return _serializer.Deserialize<T>(responseData);
     }
 
@@ -35,9 +40,10 @@ public class RealtimeDatabase : IDisposable
     /// </summary>
     /// <param name="path">The path to the node in the realtime database that needs to be retrieved</param>
     /// <returns></returns>
-    public async Task<string> Get(string path)
+    public async Task<string?> Get(string path)
     {
-        return await _requestManager.Get(path);
+        var responseData = await _requestManager.Get(path);
+        return responseData == NullString ? null : responseData;
     }
 
     /// <summary>

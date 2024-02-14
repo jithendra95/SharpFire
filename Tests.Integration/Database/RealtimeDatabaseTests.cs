@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using SharpFire.Database.Exceptions;
 using SharpFire.Firebase;
 using Tests.Integration.Utils;
 
@@ -41,6 +42,14 @@ public class RealtimeDatabaseTests : FirebaseTestBase
     }
 
     [Test]
+    public async Task GetForInvalidPath_ShouldReturnNull()
+    {
+        var result = await FirebaseApp.RealtimeDatabase.Get(_fixture.Create<string>());
+        result.Should().BeNull();
+    }
+
+    
+    [Test]
     public async Task GetWithType_ShouldReturnObject()
     {
         var result = await FirebaseApp.RealtimeDatabase.Get<MockObject>($"{TestEndpoint}{_testId}");
@@ -49,10 +58,10 @@ public class RealtimeDatabaseTests : FirebaseTestBase
     }
 
     [Test]
-    public async Task GetWithInvalidEndpoint_ShouldReturnNull()
+    public async Task GetTypeWithInvalidEndpoint_ShouldReturnNoDataException()
     {
-        var result = await FirebaseApp.RealtimeDatabase.Get<MockObject>("ggg");
-        result.Should().BeNull();
+        var act = ()=> FirebaseApp.RealtimeDatabase.Get<MockObject>(_fixture.Create<string>());
+        await act.Should().ThrowAsync<NoDataFoundException>();
     }
 
     [Test]
@@ -101,7 +110,7 @@ public class RealtimeDatabaseTests : FirebaseTestBase
         var testId = _fixture.Create<string>();
         var mockObject = CreateMock();
         
-        var result = await FirebaseApp.RealtimeDatabase.Put($"{TestEndpoint}{testId}", mockObject);
+        var result = await FirebaseApp.RealtimeDatabase.Put($"{TestEndpoint}/{testId}", mockObject);
         
         result.Should().NotBeNull();
         result?.Name.Should().Be(mockObject.Name);
@@ -146,8 +155,20 @@ public class RealtimeDatabaseTests : FirebaseTestBase
         ValidatePersistedData(_testId, mockObject.Name, newObject.Age);
     }
 
+    [Test]
+    public async Task Delete_ShouldRemoveDataAndReturnSuccess()
+    {
+        var mockObject = CreateMock();
+            
+        var result = await FirebaseApp.RealtimeDatabase.Post($"{TestEndpoint}", mockObject);
+        var response = await FirebaseApp.RealtimeDatabase.Delete($"{TestEndpoint}/{result}");
+        var data = await GetData(result);
+            
+        response.Should().BeTrue();
+        data.Should().BeNull();
+    }
 
-    private static Task<string> GetData(string testId)
+    private static Task<string?> GetData(string testId)
     {
         return FirebaseApp.RealtimeDatabase.Get($"{TestEndpoint}{testId}");
     }
