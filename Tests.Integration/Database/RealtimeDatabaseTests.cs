@@ -72,7 +72,7 @@ public class RealtimeDatabaseTests : FirebaseTestBase
         var result = await FirebaseApp.RealtimeDatabase.Post($"{TestEndpoint}", mockJsonString);
 
         result.Should().NotBeNull();
-        ValidatePersistedData(result, "Nathan", 30);
+        ValidatePersistedData(result, mockObject.Name, mockObject.Age);
     }
 
 
@@ -136,7 +136,7 @@ public class RealtimeDatabaseTests : FirebaseTestBase
         var savedObject = JsonConvert.DeserializeObject<MockAgeObject>(result);
         savedObject?.Age.Should().Be(newObject.Age);
 
-        ValidatePersistedData(_testId, mockObject.Name, newObject.Age);
+        ValidatePersistedData(id, mockObject.Name, newObject.Age);
     }
 
     [Test]
