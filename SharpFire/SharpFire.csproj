@@ -5,10 +5,16 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Authors>Jithendra Thenuwara</Authors>
+        <Title>SharpFire</Title>
+        <Description>Firebase API wrapper to access realtimedatabase</Description>
+        <RepositoryUrl>https://github.com/jithendra95/SharpFire</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Firebase Realtimedatabase Firestore API</PackageTags>
+        <PackageLicenseUrl>https://github.com/jithendra95/SharpFire/blob/main/LICENSE</PackageLicenseUrl>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Google.Apis.IAMCredentials.v1" Version="1.60.0.2528" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 
 </Project>
