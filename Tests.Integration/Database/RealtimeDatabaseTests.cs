@@ -55,7 +55,7 @@ public class RealtimeDatabaseTests : FirebaseTestBase
     }
 
     [Test]
-    public async Task GetTypeWithInvalidEndpoint_ShouldReturnNoDataException()
+    public async Task GetWithTypeWithInvalidEndpoint_ShouldReturnNoDataException()
     {
         var act = ()=> FirebaseApp.RealtimeDatabase.Get<MockObject>(_fixture.Create<string>());
         await act.Should().ThrowAsync<NoDataFoundException>();
