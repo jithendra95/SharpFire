@@ -1,6 +1,6 @@
 ﻿namespace SharpFire.Firebase;
 
-public class AppOptions
+public record AppOptions
 {
     public AppOptions(string accessToken, string databaseUrl)
     {
@@ -8,6 +8,13 @@ public class AppOptions
         DatabaseUrl = databaseUrl;
     }
 
-    public string AccessToken { get; }
-    public string DatabaseUrl { get; }
-}
+    public AppOptions()
+    {
+        // Empty constructor
+    }
+
+    public string? PathToSecretFile { get; init; }
+    public string? SecretJson { get; init; }
+    public string? AccessToken { get; init; }
+    public string DatabaseUrl { get; init; }
+};

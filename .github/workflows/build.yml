@@ -12,6 +12,7 @@ jobs:
     env:
       API_TOKEN: ${{ secrets.API_TOKEN }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SECRET_JSON: ${{ secrets.SECRET_JSON }}
 
     steps:
       - uses: actions/checkout@v3

@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using NSubstitute;
 using NUnit.Framework;
 using SharpFire.Firebase;
 
@@ -21,17 +20,17 @@ public class FirebaseAppTests
     public void Create_ShouldInstantiate_RealtimeDatabase()
     {
         var appOptions =
-            new AppOptions(MockAccessToken, MockDatabaseUrl);
+            new AppOptions( MockAccessToken, MockDatabaseUrl);
         FirebaseApp.Create(appOptions);
         FirebaseApp.RealtimeDatabase.Should().NotBeNull();
     }
 
     [TestCase("", MockDatabaseUrl)]
     [TestCase(MockAccessToken, "")]
-    public void Create_ShouldFail_WhenAccessTokenOrDatabaseURLIsEmpty(string accessToken, string databaseUrl)
+    public void Create_ShouldFail_WhenAccessTokenOrDatabaseURLIsEmpty(string path, string databaseUrl)
     {
         var appOptions =
-            new AppOptions(accessToken, databaseUrl);
+            new AppOptions( path, databaseUrl);
         var action = () => FirebaseApp.Create(appOptions);
         action.Should().Throw<Exception>();
     }
@@ -40,7 +39,7 @@ public class FirebaseAppTests
     public void Create_ShouldFail_WhenInvokedMultipleTimes_WithoutDisposing()
     {
         var appOptions =
-            new AppOptions(MockAccessToken, MockDatabaseUrl);
+            new AppOptions( MockAccessToken, MockDatabaseUrl);
         FirebaseApp.Create(appOptions);
 
         var action = () => FirebaseApp.Create(appOptions);
