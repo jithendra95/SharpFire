@@ -14,11 +14,12 @@ Install-Package FireSharp
 
 ## Sample usage for Realtime Database
 ### Initialization
+To initialize the Firebase app you will need to generate a private key file. You can read about how to do it [here](https://firebase.google.com/docs/admin/setup#initialize_the_sdk_in_non-google_environments)
 ```csharp
-var apiToken = Environment.GetEnvironmentVariable("API_TOKEN");
+var pathToSecretJson = Environment.GetEnvironmentVariable("PATH_TO_SECRET_JSON");
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-FirebaseApp.Create(new AppOptions(apiToken, databaseUrl)); //Creates an instance of Realtimedatabase
+FirebaseApp.Create(new AppOptions { PathToSecretFile = pathToSecretJson, DatabaseUrl = databaseUrl })); //Creates an instance of Realtimedatabase
 ```
 ### GET
 
