@@ -69,7 +69,10 @@ public class RealtimeDatabaseTests : FirebaseTestBase
         var result = await FirebaseApp.RealtimeDatabase.Post($"{TestEndpoint}", mockJsonString);
 
         result.Should().NotBeNull();
-        ValidatePersistedData(result, mockObject.Name, mockObject.Age);
+        var result1 = await GetData(result);
+        var mockObject1 = JsonConvert.DeserializeObject<MockObject>(result1);
+        mockObject1?.Name.Should().Be(mockObject.Name);
+        mockObject1?.Age.Should().Be(mockObject.Age);
     }
 
 
@@ -80,7 +83,10 @@ public class RealtimeDatabaseTests : FirebaseTestBase
         var result = await FirebaseApp.RealtimeDatabase.Post($"{TestEndpoint}", mockObject);
 
         result.Should().NotBeNull();
-        ValidatePersistedData(result, mockObject.Name, mockObject.Age);
+        var result1 = await GetData(result);
+        var mockObject1 = JsonConvert.DeserializeObject<MockObject>(result1);
+        mockObject1?.Name.Should().Be(mockObject.Name);
+        mockObject1?.Age.Should().Be(mockObject.Age);
     }
 
     [Test]
@@ -98,7 +104,10 @@ public class RealtimeDatabaseTests : FirebaseTestBase
         savedObject?.Name.Should().Be(mockObject.Name);
         savedObject?.Age.Should().Be(mockObject.Age);
 
-        ValidatePersistedData(testId, mockObject.Name, mockObject.Age);
+        var result1 = await GetData(testId);
+        var mockObject1 = JsonConvert.DeserializeObject<MockObject>(result1);
+        mockObject1?.Name.Should().Be(mockObject.Name);
+        mockObject1?.Age.Should().Be(mockObject.Age);
     }
 
     [Test]
@@ -113,7 +122,10 @@ public class RealtimeDatabaseTests : FirebaseTestBase
         result?.Name.Should().Be(mockObject.Name);
         result?.Age.Should().Be(mockObject.Age);
 
-        ValidatePersistedData(testId, mockObject.Name, mockObject.Age);
+        var result1 = await GetData(testId);
+        var mockObject1 = JsonConvert.DeserializeObject<MockObject>(result1);
+        mockObject1?.Name.Should().Be(mockObject.Name);
+        mockObject1?.Age.Should().Be(mockObject.Age);
     }
 
     [Test]
@@ -133,7 +145,10 @@ public class RealtimeDatabaseTests : FirebaseTestBase
         var savedObject = JsonConvert.DeserializeObject<MockAgeObject>(result);
         savedObject?.Age.Should().Be(newObject.Age);
 
-        ValidatePersistedData(id, mockObject.Name, newObject.Age);
+        var result1 = await GetData(id);
+        var mockObject1 = JsonConvert.DeserializeObject<MockObject>(result1);
+        mockObject1?.Name.Should().Be(mockObject.Name);
+        mockObject1?.Age.Should().Be(newObject.Age);
     }
 
     [Test]
@@ -149,7 +164,10 @@ public class RealtimeDatabaseTests : FirebaseTestBase
         result.Should().NotBeNull();
         result?.Age.Should().Be(newObject.Age);
 
-        ValidatePersistedData(id, mockObject.Name, newObject.Age);
+        var result1 = await GetData(id);
+        var mockObject1 = JsonConvert.DeserializeObject<MockObject>(result1);
+        mockObject1?.Name.Should().Be(mockObject.Name);
+        mockObject1?.Age.Should().Be(newObject.Age);
     }
 
     [Test]
@@ -170,15 +188,7 @@ public class RealtimeDatabaseTests : FirebaseTestBase
         return FirebaseApp.RealtimeDatabase.Get($"{TestEndpoint}{testId}");
     }
 
-    private static async void ValidatePersistedData(string testId, string expectedName, int expectedAge)
-    {
-        var result = await GetData(testId);
-        var mockObject = JsonConvert.DeserializeObject<MockObject>(result);
-        mockObject?.Name.Should().Be(expectedName);
-        mockObject?.Age.Should().Be(expectedAge);
-    }
-    
-    
+
     private MockObject CreateMock()
     {
         var name = _fixture.Create<string>();
