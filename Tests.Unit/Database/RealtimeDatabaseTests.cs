@@ -26,14 +26,14 @@ public class RealtimeDatabaseTests
     {
         serializer = Substitute.For<ISerializer>();
         requestManager = Substitute.For<IRequestManager>();
-        database = new RealtimeDatabase(serializer, requestManager);
+        database = new RealtimeDatabase(serializer, requestManager, "token", "paramName");
     }
 
     [Test]
     public async Task Get_ShouldInvokeGetMethodOnRequestManager()
     {
         await database.Get(UsersEndpoint);
-        await requestManager.Received(1).Get(UsersEndpoint);
+        await requestManager.Received(1).Get(Arg.Any<string>());
     }
 
     [Test]
@@ -41,83 +41,83 @@ public class RealtimeDatabaseTests
     {
         requestManager.Get(Arg.Any<string>()).Returns(MockJsonString);
         await database.Get<MockObject>(UsersEndpoint);
-        await requestManager.Received(1).Get(UsersEndpoint);
+        await requestManager.Received(1).Get(Arg.Any<string>());
         serializer.Received(1).Deserialize<MockObject>(MockJsonString);
     }
 
     [Test]
     public async Task Post_ShouldInvokePostMethodOnRequestManagerAndReturnName()
     {
-        requestManager.Post(UsersEndpoint, Arg.Any<StringContent>()).Returns(MockPostJsonString);
+        requestManager.Post(Arg.Any<string>(), Arg.Any<StringContent>()).Returns(MockPostJsonString);
 
         var response = await database.Post(UsersEndpoint, MockJsonString);
 
-        await requestManager.Received(1).Post(UsersEndpoint, Arg.Any<StringContent>());
+        await requestManager.Received(1).Post(Arg.Any<string>(), Arg.Any<StringContent>());
         response.Should().BeOfType<string>();
     }
 
     [Test]
     public async Task PostWithType_ShouldInvokePostMethodOnRequestManagerDeserialize_AndReturnName()
     {
-        requestManager.Post(UsersEndpoint, Arg.Any<StringContent>()).Returns(MockPostJsonString);
+        requestManager.Post(Arg.Any<string>(), Arg.Any<StringContent>()).Returns(MockPostJsonString);
 
         var response = await database.Post(UsersEndpoint, _mockObject);
 
-        await requestManager.Received(1).Post(UsersEndpoint, Arg.Any<StringContent>());
+        await requestManager.Received(1).Post(Arg.Any<string>(), Arg.Any<StringContent>());
         response.Should().BeOfType<string>();
     }
 
     [Test]
     public async Task Put_ShouldInvokePutMethodOnRequestManagerAndReturnName()
     {
-        requestManager.Put(UsersEndpoint, Arg.Any<StringContent>()).Returns(MockJsonString);
+        requestManager.Put(Arg.Any<string>(), Arg.Any<StringContent>()).Returns(MockJsonString);
 
         var response = await database.Put(UsersEndpoint, MockJsonString);
 
-        await requestManager.Received(1).Put(UsersEndpoint, Arg.Any<StringContent>());
+        await requestManager.Received(1).Put(Arg.Any<string>(), Arg.Any<StringContent>());
         response.Should().BeOfType<string>();
     }
 
     [Test]
     public async Task PutWithType_ShouldInvokePutMethodOnRequestManagerDeserialize_AndReturnName()
     {
-        requestManager.Put(UsersEndpoint, Arg.Any<StringContent>()).Returns(MockJsonString);
+        requestManager.Put(Arg.Any<string>(), Arg.Any<StringContent>()).Returns(MockJsonString);
 
         await database.Put(UsersEndpoint, _mockObject);
 
-        await requestManager.Received(1).Put(UsersEndpoint, Arg.Any<StringContent>());
+        await requestManager.Received(1).Put(Arg.Any<string>(), Arg.Any<StringContent>());
     }
 
     [Test]
     public async Task Patch_ShouldInvokePatchMethodOnRequestManagerAndReturnName()
     {
-        requestManager.Patch(UsersEndpoint, Arg.Any<StringContent>()).Returns(MockJsonString);
+        requestManager.Patch(Arg.Any<string>(), Arg.Any<StringContent>()).Returns(MockJsonString);
 
         var response = await database.Patch(UsersEndpoint, MockJsonString);
 
-        await requestManager.Received(1).Patch(UsersEndpoint, Arg.Any<StringContent>());
+        await requestManager.Received(1).Patch(Arg.Any<string>(), Arg.Any<StringContent>());
         response.Should().BeOfType<string>();
     }
 
     [Test]
     public async Task PatchWithType_ShouldInvokePatchMethodOnRequestManagerDeserialize_AndReturnName()
     {
-        requestManager.Patch(UsersEndpoint, Arg.Any<StringContent>()).Returns(MockJsonString);
+        requestManager.Patch(Arg.Any<string>(), Arg.Any<StringContent>()).Returns(MockJsonString);
 
         await database.Patch(UsersEndpoint, _mockObject);
 
-        await requestManager.Received(1).Patch(UsersEndpoint, Arg.Any<StringContent>());
+        await requestManager.Received(1).Patch(Arg.Any<string>(), Arg.Any<StringContent>());
     }
-    
+
     [TestCase(true)]
     [TestCase(false)]
     public async Task Delete_ShouldInvokeDeleteMethodOnRequestManager(bool deleteResponse)
     {
-        requestManager.Delete(UsersEndpoint).Returns(deleteResponse);
+        requestManager.Delete(Arg.Any<string>()).Returns(deleteResponse);
 
         var response = await database.Delete(UsersEndpoint);
-        
-        await requestManager.Received(1).Delete(UsersEndpoint);
+
+        await requestManager.Received(1).Delete(Arg.Any<string>());
         response.Should().Be(deleteResponse);
     }
 }

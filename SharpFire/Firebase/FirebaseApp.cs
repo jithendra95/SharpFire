@@ -24,6 +24,25 @@ public static class FirebaseApp
     /// <param name="appOptions"></param>
     public static void Create(AppOptions appOptions)
     {
+        ValidateAppOptions(appOptions);
+
+        lock (CreationLock)
+        {
+            if (_realtimeDatabase != null)
+                throw new Exception("FirebaseApp is already initialized");
+
+            var httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri(appOptions.DatabaseUrl);
+
+            var requestManager = new RequestManager(appOptions.DatabaseUrl);
+            var tokenAndParam = GetAccessTokenAndParamName(appOptions);
+            _realtimeDatabase = new RealtimeDatabase(Serializer, requestManager, tokenAndParam.accesstoken,
+                tokenAndParam.paramName);
+        }
+    }
+
+    private static void ValidateAppOptions(AppOptions appOptions)
+    {
         if (string.IsNullOrWhiteSpace(appOptions.PathToSecretFile) &&
             string.IsNullOrWhiteSpace(appOptions.SecretJson) && string.IsNullOrWhiteSpace(appOptions.AccessToken))
         {
@@ -34,21 +53,9 @@ public static class FirebaseApp
         {
             throw new Exception("Database URL cannot be empty");
         }
-
-        lock (CreationLock)
-        {
-            if (_realtimeDatabase != null)
-                throw new Exception("FirebaseApp is already initialized");
-
-            var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri(appOptions.DatabaseUrl);
-
-            var requestManager = CreateRequestManager(appOptions, httpClient);
-            _realtimeDatabase = new RealtimeDatabase(Serializer, requestManager);
-        }
     }
 
-    private static IRequestManager CreateRequestManager(AppOptions appOptions, HttpClient httpClient)
+    private static (string accesstoken, string paramName) GetAccessTokenAndParamName(AppOptions appOptions)
     {
         if (appOptions.PathToSecretFile is not null)
         {
@@ -56,7 +63,7 @@ public static class FirebaseApp
                 "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase.database",
                 "https://www.googleapis.com/auth/userinfo.email");
             var token = credential.UnderlyingCredential.GetAccessTokenForRequestAsync().GetAwaiter().GetResult();
-            return new RequestManager(httpClient, token, "access_token");
+            return (token, "access_token");
         }
 
         if (appOptions.SecretJson is not null)
@@ -65,12 +72,12 @@ public static class FirebaseApp
                 "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase.database",
                 "https://www.googleapis.com/auth/userinfo.email");
             var token = credential.UnderlyingCredential.GetAccessTokenForRequestAsync().GetAwaiter().GetResult();
-            return new RequestManager(httpClient, token, "access_token");
+            return (token, "access_token");
         }
 
         if (appOptions.AccessToken is not null)
-            return new RequestManager(httpClient, appOptions.AccessToken);
-        
+            return (appOptions.AccessToken, "auth");
+
         throw new InvalidOperationException();
     }
 

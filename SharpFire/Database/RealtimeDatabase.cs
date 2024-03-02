@@ -11,13 +11,18 @@ public class RealtimeDatabase : IDisposable
     private readonly ISerializer _serializer;
 
     private readonly IRequestManager _requestManager;
+    private readonly string _token;
+    private readonly string _accessTokenParamName;
     private const string NullString = "null";
 
 
-    public RealtimeDatabase(ISerializer serializer, IRequestManager requestManager)
+    public RealtimeDatabase(ISerializer serializer, IRequestManager requestManager, string token,
+        string accessTokenParamName)
     {
         _serializer = serializer;
         _requestManager = requestManager;
+        _token = token;
+        _accessTokenParamName = accessTokenParamName;
     }
 
     /// <summary>
@@ -42,7 +47,7 @@ public class RealtimeDatabase : IDisposable
     /// <returns></returns>
     public async Task<string?> Get(string path)
     {
-        var responseData = await _requestManager.Get(path);
+        var responseData = await _requestManager.Get(RequestUri(path));
         return responseData == NullString ? null : responseData;
     }
 
@@ -54,7 +59,7 @@ public class RealtimeDatabase : IDisposable
     /// <returns>Generated unique identifier for the data created</returns>
     public async Task<string> Post<T>(string path, T value)
     {
-        var responseData = await _requestManager.Post(path, _serializer.Serialize(value));
+        var responseData = await _requestManager.Post(RequestUri(path), _serializer.Serialize(value));
         var createdName = _serializer.Deserialize<PostResponse>(responseData);
         return createdName?.name ?? string.Empty;
     }
@@ -67,7 +72,7 @@ public class RealtimeDatabase : IDisposable
     /// <returns>Generated unique identifier for the data created</returns>
     public async Task<string> Post(string path, string value)
     {
-        var responseData = await _requestManager.Post(path, new StringContent(value));
+        var responseData = await _requestManager.Post(RequestUri(path), new StringContent(value));
         var createdName = _serializer.Deserialize<PostResponse>(responseData);
         return createdName?.name ?? string.Empty;
     }
@@ -80,7 +85,7 @@ public class RealtimeDatabase : IDisposable
     /// <returns>Data specified in the method call </returns>
     public async Task<T?> Put<T>(string path, T value)
     {
-        var responseData = await _requestManager.Put(path, _serializer.Serialize(value));
+        var responseData = await _requestManager.Put(RequestUri(path), _serializer.Serialize(value));
         return _serializer.Deserialize<T>(responseData);
     }
 
@@ -92,7 +97,7 @@ public class RealtimeDatabase : IDisposable
     /// <returns>JSON string of data specified in the method call </returns>
     public async Task<string> Put(string path, string value)
     {
-        return await _requestManager.Put(path, new StringContent(value));
+        return await _requestManager.Put(RequestUri(path), new StringContent(value));
     }
 
     /// <summary>
@@ -104,7 +109,7 @@ public class RealtimeDatabase : IDisposable
     /// <returns>Object of data specified in the method call </returns>
     public async Task<T?> Patch<T>(string path, T value)
     {
-        var responseData = await _requestManager.Patch(path, _serializer.Serialize(value));
+        var responseData = await _requestManager.Patch(RequestUri(path), _serializer.Serialize(value));
         return _serializer.Deserialize<T>(responseData);
     }
 
@@ -117,7 +122,7 @@ public class RealtimeDatabase : IDisposable
     /// <returns>JSON string of data specified in the method call </returns>
     public async Task<string> Patch(string path, string value)
     {
-        return await _requestManager.Patch(path, new StringContent(value));
+        return await _requestManager.Patch(RequestUri(path), new StringContent(value));
     }
 
     /// <summary>
@@ -127,9 +132,10 @@ public class RealtimeDatabase : IDisposable
     /// <returns>Success or Failure status</returns>
     public async Task<bool> Delete(string path)
     {
-        return await _requestManager.Delete(path);
+        return await _requestManager.Delete(RequestUri(path));
     }
 
+    private string RequestUri(string path) => $"{path}.json?{_accessTokenParamName}={_token}";
 
     public void Dispose()
     {
