@@ -13,15 +13,12 @@ public class RequestManagerFactory : IRequestManagerFactory
 
     public IRequestManager GetRequestManager(FirebaseServiceEnum service)
     {
-        switch (service)
+        return service switch
         {
-            case FirebaseServiceEnum.RealtimeDatabase:
-                return GetRealtimeDatabaseRequestManager(_appOptions);
-            case FirebaseServiceEnum.Firestore:
-                throw new NotImplementedException();
-            default:
-                throw new ArgumentOutOfRangeException(nameof(service), service, null);
-        }
+            FirebaseServiceEnum.RealtimeDatabase => GetRealtimeDatabaseRequestManager(_appOptions),
+            FirebaseServiceEnum.Firestore => throw new NotImplementedException(),
+            _ => throw new ArgumentOutOfRangeException(nameof(service), service, null)
+        };
     }
 
     private IRequestManager GetRealtimeDatabaseRequestManager(AppOptions appOptions)

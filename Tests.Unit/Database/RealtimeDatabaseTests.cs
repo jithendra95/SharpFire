@@ -2,6 +2,8 @@
 using NSubstitute;
 using NUnit.Framework;
 using SharpFire.Database;
+using SharpFire.Firebase;
+using SharpFire.Utils.Credentials;
 using SharpFire.Utils.Http;
 using SharpFire.Utils.Serializer;
 
@@ -24,9 +26,14 @@ public class RealtimeDatabaseTests
     [SetUp]
     public void OneTimeSetUp()
     {
-        serializer = Substitute.For<ISerializer>();
+        
         requestManager = Substitute.For<IRequestManager>();
-        database = new RealtimeDatabase(serializer, requestManager, "token", "paramName");
+        var requestManagerFactory = Substitute.For<IRequestManagerFactory>();
+        requestManagerFactory.GetRequestManager(FirebaseServiceEnum.RealtimeDatabase).Returns(requestManager);
+        
+        serializer = Substitute.For<ISerializer>();
+        
+        database = new RealtimeDatabase(serializer, requestManagerFactory, Substitute.For<IFirebaseTokenHelper>());
     }
 
     [Test]
