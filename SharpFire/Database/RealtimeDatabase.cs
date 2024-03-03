@@ -19,12 +19,12 @@ public class RealtimeDatabase : IDisposable
 
 
     public RealtimeDatabase(ISerializer serializer, IRequestManagerFactory requestManagerFactory,
-        IFirebaseTokenHelper tokenHelper)
+        IFirebaseServiceAccountHelper serviceAccountHelper)
     {
         _serializer = serializer;
         _requestManager = requestManagerFactory.GetRequestManager(FirebaseServiceEnum.RealtimeDatabase);
-        _token = tokenHelper.GetAccessToken();
-        _accessTokenParamName = tokenHelper.IsUsingServiceAccount() ? "access_token" : "auth";
+        _token = serviceAccountHelper.GetAccessToken();
+        _accessTokenParamName = serviceAccountHelper.IsUsingServiceAccount() ? "access_token" : "auth";
     }
 
     /// <summary>

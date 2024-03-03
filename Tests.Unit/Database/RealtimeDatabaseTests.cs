@@ -33,7 +33,7 @@ public class RealtimeDatabaseTests
         
         serializer = Substitute.For<ISerializer>();
         
-        database = new RealtimeDatabase(serializer, requestManagerFactory, Substitute.For<IFirebaseTokenHelper>());
+        database = new RealtimeDatabase(serializer, requestManagerFactory, Substitute.For<IFirebaseServiceAccountHelper>());
     }
 
     [Test]

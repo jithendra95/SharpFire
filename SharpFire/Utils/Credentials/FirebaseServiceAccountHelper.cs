@@ -1,13 +1,14 @@
 ﻿using Google.Apis.Auth.OAuth2;
+using Newtonsoft.Json.Linq;
 using SharpFire.Firebase;
 
 namespace SharpFire.Utils.Credentials;
 
-public class FirebaseTokenHelper : IFirebaseTokenHelper
+public class FirebaseServiceAccountHelper : IFirebaseServiceAccountHelper
 {
     private readonly AppOptions _appOptions;
 
-    public FirebaseTokenHelper(AppOptions appOptions)
+    public FirebaseServiceAccountHelper(AppOptions appOptions)
     {
         _appOptions = appOptions;
     }
@@ -33,7 +34,30 @@ public class FirebaseTokenHelper : IFirebaseTokenHelper
 
         throw new Exception("No valid credentials found");
     }
-    
+
+    public string GetProjectId()
+    {
+        if (_appOptions.PathToSecretFile is not null)
+        {
+            var jsonContent = File.ReadAllText(_appOptions.PathToSecretFile);
+            var jsonObject = JObject.Parse(jsonContent);
+            return GetProjectId(jsonObject);    
+        }
+        
+        if (_appOptions.SecretJson is not null)
+        {
+            var jsonObject = JObject.Parse(_appOptions.SecretJson);
+            return GetProjectId(jsonObject);
+        }
+        
+        throw new Exception("Project Id cannot be retrieved");
+    }
+
+    private static string GetProjectId(JObject jsonObject)
+    {
+        return jsonObject["project_id"]?.ToString() ?? throw new Exception("Project Id not found in the secret file");
+    }
+
     public bool IsUsingServiceAccount()
     {
         return _appOptions.PathToSecretFile is not null || _appOptions.SecretJson is not null;
