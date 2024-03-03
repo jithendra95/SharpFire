@@ -3,10 +3,9 @@
 internal class RequestManager : IRequestManager
 {
     private readonly HttpClient _client;
-    public RequestManager(string baseUrl)
+    public RequestManager(HttpClient httpClient)
     {
-        _client = new HttpClient();
-        _client.BaseAddress = new Uri(baseUrl.EndsWith("/") ? baseUrl : baseUrl + "/");
+        _client = httpClient;
     }
 
     public Task<string> Get(string url)
@@ -60,8 +59,6 @@ internal class RequestManager : IRequestManager
 
         return await response.Content.ReadAsStringAsync();
     }
-
-    //private string RequestUri(string path) => $"{path}.json?{_authParameter}={AccessToken}";
 
     public void Dispose()
     {
