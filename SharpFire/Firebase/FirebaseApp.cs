@@ -1,5 +1,6 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using SharpFire.Database;
+using SharpFire.Utils.Credentials;
 using SharpFire.Utils.Http;
 using SharpFire.Utils.Serializer;
 
@@ -30,14 +31,10 @@ public static class FirebaseApp
         {
             if (_realtimeDatabase != null)
                 throw new Exception("FirebaseApp is already initialized");
-
-            var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri(appOptions.DatabaseUrl);
-
-            var requestManager = new RequestManager(appOptions.DatabaseUrl);
-            var tokenAndParam = GetAccessTokenAndParamName(appOptions);
-            _realtimeDatabase = new RealtimeDatabase(Serializer, requestManager, tokenAndParam.accesstoken,
-                tokenAndParam.paramName);
+            
+            var requestManagerFactory = new RequestManagerFactory(appOptions);
+            var tokenHelper = new FirebaseTokenHelper(appOptions);
+            _realtimeDatabase = new RealtimeDatabase(Serializer, requestManagerFactory, tokenHelper);
         }
     }
 
@@ -53,32 +50,6 @@ public static class FirebaseApp
         {
             throw new Exception("Database URL cannot be empty");
         }
-    }
-
-    private static (string accesstoken, string paramName) GetAccessTokenAndParamName(AppOptions appOptions)
-    {
-        if (appOptions.PathToSecretFile is not null)
-        {
-            var credential = GoogleCredential.FromFile(appOptions.PathToSecretFile).CreateScoped(
-                "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase.database",
-                "https://www.googleapis.com/auth/userinfo.email");
-            var token = credential.UnderlyingCredential.GetAccessTokenForRequestAsync().GetAwaiter().GetResult();
-            return (token, "access_token");
-        }
-
-        if (appOptions.SecretJson is not null)
-        {
-            var credential = GoogleCredential.FromJson(appOptions.SecretJson).CreateScoped(
-                "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase.database",
-                "https://www.googleapis.com/auth/userinfo.email");
-            var token = credential.UnderlyingCredential.GetAccessTokenForRequestAsync().GetAwaiter().GetResult();
-            return (token, "access_token");
-        }
-
-        if (appOptions.AccessToken is not null)
-            return (appOptions.AccessToken, "auth");
-
-        throw new InvalidOperationException();
     }
 
     public static void Dispose()

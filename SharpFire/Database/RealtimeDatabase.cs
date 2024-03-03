@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SharpFire.Database.Exceptions;
+using SharpFire.Firebase;
+using SharpFire.Utils.Credentials;
 using SharpFire.Utils.Http;
 using SharpFire.Utils.Serializer;
 using static System.GC;
@@ -16,13 +18,13 @@ public class RealtimeDatabase : IDisposable
     private const string NullString = "null";
 
 
-    public RealtimeDatabase(ISerializer serializer, IRequestManager requestManager, string token,
-        string accessTokenParamName)
+    public RealtimeDatabase(ISerializer serializer, IRequestManagerFactory requestManagerFactory,
+        IFirebaseTokenHelper tokenHelper)
     {
         _serializer = serializer;
-        _requestManager = requestManager;
-        _token = token;
-        _accessTokenParamName = accessTokenParamName;
+        _requestManager = requestManagerFactory.GetRequestManager(FirebaseServiceEnum.RealtimeDatabase);
+        _token = tokenHelper.GetAccessToken();
+        _accessTokenParamName = tokenHelper.IsUsingServiceAccount() ? "access_token" : "auth";
     }
 
     /// <summary>
