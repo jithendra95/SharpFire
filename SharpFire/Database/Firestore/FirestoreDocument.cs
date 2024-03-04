@@ -1,4 +1,5 @@
-﻿using SharpFire.Utils.Http;
+﻿using SharpFire.Database.Firestore;
+using SharpFire.Utils.Http;
 
 namespace SharpFire.Database;
 

@@ -2,7 +2,7 @@
 using SharpFire.Utils.Http;
 using SharpFire.Utils.Serializer;
 
-namespace SharpFire.Database;
+namespace SharpFire.Database.Firestore;
 
 public class FirestoreDatabase
 {

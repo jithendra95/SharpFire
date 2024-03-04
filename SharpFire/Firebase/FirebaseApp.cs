@@ -1,5 +1,6 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using SharpFire.Database;
+using SharpFire.Database.Firestore;
 using SharpFire.Utils.Credentials;
 using SharpFire.Utils.Http;
 using SharpFire.Utils.Serializer;
