@@ -18,7 +18,7 @@ public class FirestoreDocument
         return new FirestoreCollection(_requestManager, $"{_path}/{collection}");
     }
 
-    public Task<string> Get()
+    public Task<string> GetSnapshot()
     {
         return _requestManager.Get(_path);
     }

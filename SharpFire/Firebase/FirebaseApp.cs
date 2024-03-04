@@ -9,7 +9,7 @@ namespace SharpFire.Firebase;
 public static class FirebaseApp
 {
     private static RealtimeDatabase? _realtimeDatabase;
-    private static Firestore? _firestore;
+    private static FirestoreDatabase? _firestore;
     
     private static readonly ISerializer Serializer = new Serializer();
 
@@ -19,7 +19,7 @@ public static class FirebaseApp
     public static RealtimeDatabase RealtimeDatabase =>
         _realtimeDatabase ?? throw new Exception("FirebaseApp is not initialized");
     
-    public static Firestore Firestore =>
+    public static FirestoreDatabase FirestoreDatabase =>
         _firestore ?? throw new Exception("Firestore is not initialized");
 
     /// <summary>
@@ -42,7 +42,7 @@ public static class FirebaseApp
             var requestManagerFactory = new RequestManagerFactory(appOptions, serviceAccountHelper);
             
             _realtimeDatabase = new RealtimeDatabase(Serializer, requestManagerFactory, serviceAccountHelper);
-            _firestore = new Firestore(Serializer, requestManagerFactory);
+            _firestore = new FirestoreDatabase(Serializer, requestManagerFactory);
         }
     }
 
