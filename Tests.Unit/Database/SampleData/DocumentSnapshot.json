@@ -1,0 +1,19 @@
+{
+  "name": "projects/super-pass-64e2b/databases/(default)/documents/money-easy/WVKZCWXyVIbymQJYsSvE",
+  "fields": {
+    "isMarried": {
+      "booleanValue": true
+    },
+    "pathToParent": {
+      "referenceValue": "projects/super-pass-64e2b/databases/(default)/documents/money-easy/Zw8MTlsNs1gXBSz3U5Qj"
+    },
+    "name": {
+      "stringValue": "Jithendra"
+    },
+    "age": {
+      "integerValue": "20"
+    }
+  },
+  "createTime": "2024-03-01T14:01:10.829804Z",
+  "updateTime": "2024-03-04T10:42:52.978423Z"
+}

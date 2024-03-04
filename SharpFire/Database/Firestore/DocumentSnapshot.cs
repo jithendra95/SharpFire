@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace SharpFire.Database.Firestore;
 
 public class DocumentSnapshot
 {
-    
     public string Id { get; }
 
     private readonly JToken? _fields;
@@ -15,8 +13,8 @@ public class DocumentSnapshot
     public DocumentSnapshot(string json)
     {
         var documentObject = JObject.Parse(json);
-        Id = GetIdFromDocument(documentObject) ?? string.Empty;
-        _fields = documentObject["fields"];
+        Id = GetIdFromDocument(documentObject) ?? throw new InvalidDataException("Invalid document");
+        _fields = documentObject["fields"] ?? throw new InvalidDataException("Invalid document");
         CreatedTime = documentObject["createTime"]?.ToString();
         UpdatedTime = documentObject["updateTime"]?.ToString();
     }
@@ -30,6 +28,4 @@ public class DocumentSnapshot
     {
         return _fields?.ToObject<Dictionary<string, object>>() ?? new Dictionary<string, object>();
     }
-
-    
 }

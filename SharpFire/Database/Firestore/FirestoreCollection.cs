@@ -33,7 +33,7 @@ public class FirestoreCollection
         return this;
     }
 
-    public async Task<QuerySnapshot> GetSnapshot()
+    public async Task<QuerySnapshot> GetSnapshotAsync()
     {
         var requestPath = _queryParams == string.Empty ? _path : $"{_path}?{_queryParams}";
         var response = await _requestManager.Get(requestPath);

@@ -27,4 +27,13 @@
       <ProjectReference Include="..\SharpFire\SharpFire.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Database\SampleData\DocumentSnapshot.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Database\SampleData\QuerySnapshot.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

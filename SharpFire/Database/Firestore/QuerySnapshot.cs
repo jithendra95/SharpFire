@@ -14,9 +14,7 @@ public class QuerySnapshot
     private IEnumerable<DocumentSnapshot> GetDocuments()
     {
         var collectionObject = JObject.Parse(_json);
-        var documents = collectionObject["documents"];
-        if (documents is null) throw new Exception("Not a valid collection");
-        
+        var documents = collectionObject["documents"] ?? throw new InvalidDataException("Not a valid collection");
         return documents.Select(document => new DocumentSnapshot(document.ToString()));
     }
     

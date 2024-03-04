@@ -1,7 +1,6 @@
-﻿using SharpFire.Database.Firestore;
-using SharpFire.Utils.Http;
+﻿using SharpFire.Utils.Http;
 
-namespace SharpFire.Database;
+namespace SharpFire.Database.Firestore;
 
 public class FirestoreDocument
 {
@@ -19,8 +18,9 @@ public class FirestoreDocument
         return new FirestoreCollection(_requestManager, $"{_path}/{collection}");
     }
 
-    public Task<string> GetSnapshot()
+    public async Task<DocumentSnapshot> GetSnapshotAsync()
     {
-        return _requestManager.Get(_path);
+        var response = await _requestManager.Get(_path);
+        return new DocumentSnapshot(response);
     }
 }
