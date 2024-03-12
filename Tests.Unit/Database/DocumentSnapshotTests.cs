@@ -12,8 +12,8 @@ public class DocumentSnapshotTests
     {
         var documentSnapshot = new DocumentSnapshot(_jsonContent);
         documentSnapshot.Id.Should().Be("WVKZCWXyVIbymQJYsSvE");
-        documentSnapshot.CreatedTime.Should().NotBeEmpty();
-        documentSnapshot.UpdatedTime.Should().NotBeEmpty();
+        documentSnapshot.CreatedTime.Should().NotBeNull();
+        documentSnapshot.UpdatedTime.Should().NotBeNull();
     }
     
     [Test]

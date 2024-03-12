@@ -1,19 +1,58 @@
 {
   "name": "projects/super-pass-64e2b/databases/(default)/documents/money-easy/WVKZCWXyVIbymQJYsSvE",
   "fields": {
-    "isMarried": {
-      "booleanValue": true
+    "Extra": {
+      "doubleValue": 1.0989
+    },
+    "myMap": {
+      "mapValue": {
+        "fields": {
+          "newKey": {
+            "integerValue": "11"
+          },
+          "myKey": {
+            "stringValue": "Hello"
+          }
+        }
+      }
+    },
+    "myDate": {
+      "timestampValue": "2024-03-08T11:11:01.209Z"
+    },
+    "Name": {
+      "stringValue": "Jithendra"
+    },
+    "myLats": {
+      "geoPointValue": {
+        "latitude": 12.111,
+        "longitude": 45.112
+      }
     },
     "pathToParent": {
       "referenceValue": "projects/super-pass-64e2b/databases/(default)/documents/money-easy/Zw8MTlsNs1gXBSz3U5Qj"
     },
-    "name": {
-      "stringValue": "Jithendra"
+    "isMarried": {
+      "booleanValue": true
+    },
+    "myArray": {
+      "arrayValue": {
+        "values": [
+          {
+            "stringValue": "dwsdf"
+          },
+          {
+            "stringValue": "wefwef"
+          }
+        ]
+      }
     },
     "age": {
       "integerValue": "20"
+    },
+    "myNull": {
+      "nullValue": null
     }
   },
   "createTime": "2024-03-01T14:01:10.829804Z",
-  "updateTime": "2024-03-04T10:42:52.978423Z"
+  "updateTime": "2024-03-08T16:25:44.479268Z"
 }
