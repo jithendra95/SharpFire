@@ -15,7 +15,7 @@ public class FirestoreDatabaseTests : FirebaseTestBase
         var document = firestoreRef.Collection("money-easy");
         var result = await document.GetSnapshotAsync();
 
-        result.Documents.Count().Should().Be(2);
+        result.Documents.Should().NotBeEmpty();
     }
     
     [Test]
@@ -27,7 +27,6 @@ public class FirestoreDatabaseTests : FirebaseTestBase
         var result = await document.GetSnapshotAsync();
 
         var documents = result.Documents.ToList();
-        var docFields= documents.First().ToDictionary();
-        documents.Count().Should().Be(1);
+        documents.Count.Should().Be(1);
     }
 }

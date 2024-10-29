@@ -1,7 +1,7 @@
 {
   "name": "projects/super-pass-64e2b/databases/(default)/documents/money-easy/WVKZCWXyVIbymQJYsSvE",
   "fields": {
-    "Extra": {
+    "extra": {
       "doubleValue": 1.0989
     },
     "myMap": {
@@ -19,7 +19,7 @@
     "myDate": {
       "timestampValue": "2024-03-08T11:11:01.209Z"
     },
-    "Name": {
+    "name": {
       "stringValue": "Jithendra"
     },
     "myLats": {

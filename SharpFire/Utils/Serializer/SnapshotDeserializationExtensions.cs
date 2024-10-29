@@ -5,11 +5,24 @@ namespace SharpFire.Utils.Serializer;
 
 public static class SnapshotDeserializationExtensions
 {
+    
+    public static string? GetIdFromDocument(this JObject documentObject)
+    {
+        var name = documentObject["name"];
+        return name?.ToString().Split("/").Last();
+    }
+    
+    public static DateTime? GetDateTimeFromDocument(this JObject documentObject, string propertyName)
+    {
+        var time = documentObject[propertyName]?.ToString();
+        return time != null ? DateTime.Parse(time) : null;
+    }
+    
     public static Dictionary<string, object> DeserializeFields(this Dictionary<string, object> fields)
     {
         return fields.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ExtractValueFromJson() );
     }
-
+    
     private static object ExtractValueFromJson(this object jsonValue)
     {
         var value = jsonValue as JObject;
@@ -42,7 +55,7 @@ public static class SnapshotDeserializationExtensions
         return jsonValue;
     }
     
-    private static (double lattiude, double longitude) GetGeoPoint(JObject geoPoint)
+    private static (double latitude, double longitude) GetGeoPoint(JObject geoPoint)
     {
         var lat = geoPoint["latitude"]?.ToString() ?? throw new InvalidDataException("Invalid geoPoint");
         var lon = geoPoint["longitude"]?.ToString() ?? throw new InvalidDataException("Invalid geoPoint");
