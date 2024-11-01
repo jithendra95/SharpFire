@@ -11,6 +11,9 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>Firebase Realtimedatabase Firestore API</PackageTags>
         <PackageLicenseUrl>https://github.com/jithendra95/SharpFire/blob/main/LICENSE</PackageLicenseUrl>
+        <Version>1.1.0</Version>
+        <PackageReleaseNotes>- Add support for Firestore querying
+- Change the Initialization of Firebase to accept the path to JSON key file</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
